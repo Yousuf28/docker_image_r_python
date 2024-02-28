@@ -109,7 +109,7 @@ RUN ./doom install --config --no-env --no-fonts
 WORKDIR ~/
 
 RUN mkdir settings
-COPY packages.json install_packages.R requirements.txt install_quarto.sh .tmux.conf .vimrc ./settings/
+COPY packages.json install_packages.R requirements.txt install_quarto.sh ./settings/
 
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
