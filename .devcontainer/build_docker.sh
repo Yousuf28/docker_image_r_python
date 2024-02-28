@@ -2,7 +2,7 @@
 
 echo "Build the docker"
 
-docker build . -f Dockerfile.base \
+docker build . -f Dockerfile \
                --progress=plain \
                --build-arg PROJECT_NAME="R Dev Env" \
                --build-arg VENV_NAME="R_ENV" \
@@ -11,12 +11,11 @@ docker build . -f Dockerfile.base \
                --build-arg R_VERSION_PATCH=1 \
                 --build-arg DEBIAN_FRONTEND=noninteractive \
                  --build-arg CRAN_MIRROR="https://cran.rstudio.com/" \
-               --build-arg QUARTO_VER="1.3.450" \
-               -t rkrispin/vscode_r_dev:0.1.0
+               -t yousuf28/r_python:vim
 
 if [[ $? = 0 ]] ; then
 echo "Pushing docker..."
-docker push rkrispin/vscode_r_dev:0.1.0
+docker push yousuf28/r_python:vim
 else
 echo "Docker build failed"
 fi

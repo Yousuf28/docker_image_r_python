@@ -1,6 +1,6 @@
 {
     "name": "R Dev Environment",
-    // "image": "rkrispin/vscode_r_dev:0.1.0",
+    // "image": "yousuf28/R_python:latest",
     "build": {
         "dockerfile": "Dockerfile.dev",
         "context": ".",

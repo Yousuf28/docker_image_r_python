@@ -10,14 +10,14 @@ ARG R_VERSION_MINOR=3
 ARG R_VERSION_PATCH=1
 ARG DEBIAN_FRONTEND=noninteractive
 ARG CRAN_MIRROR=https://cran.rstudio.com/
-ARG QUARTO_VER="1.3.450"
+# ARG QUARTO_VER="1.3.450"
 
 # Define environment variables
 ENV VENV_NAME=$VENV_NAME
 ENV R_VERSION_MAJOR=$R_VERSION_MAJOR
 ENV R_VERSION_MINOR=$R_VERSION_MINOR
 ENV R_VERSION_PATCH=$R_VERSION_PATCH
-ENV QUARTO_VER=$QUARTO_VER
+# ENV QUARTO_VER=$QUARTO_VER
 ENV CONFIGURE_OPTIONS="--with-cairo --with-jpeglib --enable-R-shlib --with-blas --with-lapack"
 ENV TZ=UTC
 ENV CRAN_MIRROR=$CRAN_MIRROR
@@ -43,6 +43,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzstd-dev \
     liblzma-dev \
     libpcre2-dev \
+    libxpm-dev \
     locales \
     openjdk-8-jdk \
     screen \
@@ -84,10 +85,12 @@ WORKDIR ~/
 
 RUN mkdir settings
 COPY packages.json install_packages.R requirements.txt install_quarto.sh ./settings/
+COPY .tmux.conf  ~/.tmux.conf
+COPY .vimrc  ~/.vimrc
 RUN Rscript ./settings/install_packages.R
 
 # Installing Quarto
-RUN bash ./settings/install_quarto.sh $QUARTO_VER
+# RUN bash ./settings/install_quarto.sh $QUARTO_VER
 
 
 # Step 5 - Set Python Environment and install radian
@@ -96,10 +99,12 @@ RUN python3 -m venv /opt/$VENV_NAME  \
     && echo "source /opt/$VENV_NAME/bin/activate" >> ~/.bashrc \
     && echo "alias r='radian'" >> ~/.bashrc
 
-
+RUN R -e 'remotes::install_github("sbutler5/SENDsanitizer@package")'
 RUN pip3 install -r ./settings/requirements.txt
 
-COPY init.R /root/.vscode-R/init.R
-COPY init.R /root/.vscode-server/extensions/reditorsupport.r-2.8.2/R/session/init.R
-
-
+# RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# RUN vim +PlugInstall +qa
+# RUN vim +CocInstall coc-pyright +qa
+# RUN vim +CocInstall coc-r-lsp +qa
+# COPY init.R /root/.vscode-R/init.R
+# COPY init.R /root/.vscode-server/extensions/reditorsupport.r-2.8.2/R/session/init.R
