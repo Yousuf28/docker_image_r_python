@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gfortran \
     git \
     g++ \
+    gnutls-dev \
     libreadline-dev \
     libx11-dev \
     libxt-dev \
@@ -57,6 +58,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo\
     jq\
     curl\
+    fzf \
+    fd-find \
     libgit2-dev \
     libmagick++-dev \
     make \
@@ -81,17 +84,45 @@ RUN ./configure ${CONFIGURE_OPTIONS} && \
 
 RUN locale-gen en_US.UTF-8
 
+WORKDIR /root
+# install emacs
+RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
+    tar zxvf emacs-29.2.tar.gz && \
+    rm emacs-29.2.tar.gz
+
+WORKDIR /emacs-29.2
+
+RUN ./autogen.sh && \
+    ./configure --with-x-toolkit=no && \
+    make -j$(nproc) && \
+    make install
+
+WORKDIR /root
+# RUN git clone -b macbook_personal --single-branch https://github.com/Yousuf28/doomemacs_config.git
+
+RUN git clone --depth 1 https://github.com/Yousuf28/doomemacs /root/.config/emacs && \
+    export PATH=/root/.config/emacs/bin:$PATH
+WORKDIR /root/.config/emacs/bin
+RUN ./doom install --config --no-env --no-fonts
+
+
 WORKDIR ~/
 
 RUN mkdir settings
-COPY packages.json install_packages.R requirements.txt install_quarto.sh ./settings/
-COPY .tmux.conf  ~/.tmux.conf
-COPY .vimrc  ~/.vimrc
+COPY packages.json install_packages.R requirements.txt install_quarto.sh .tmux.conf .vimrc ./settings/
+
+RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+WORKDIR /root
+
+RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
+RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
+
 RUN Rscript ./settings/install_packages.R
 
+WORKDIR ~/
 # Installing Quarto
 # RUN bash ./settings/install_quarto.sh $QUARTO_VER
-
 
 # Step 5 - Set Python Environment and install radian
 RUN python3 -m venv /opt/$VENV_NAME  \
@@ -102,9 +133,5 @@ RUN python3 -m venv /opt/$VENV_NAME  \
 RUN R -e 'remotes::install_github("sbutler5/SENDsanitizer@package")'
 RUN pip3 install -r ./settings/requirements.txt
 
-# RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-# RUN vim +PlugInstall +qa
-# RUN vim +CocInstall coc-pyright +qa
-# RUN vim +CocInstall coc-r-lsp +qa
 # COPY init.R /root/.vscode-R/init.R
 # COPY init.R /root/.vscode-server/extensions/reditorsupport.r-2.8.2/R/session/init.R
