@@ -84,26 +84,26 @@ RUN ./configure ${CONFIGURE_OPTIONS} && \
 
 RUN locale-gen en_US.UTF-8
 
-WORKDIR /root
-# install emacs
-RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
-    tar zxvf emacs-29.2.tar.gz && \
-    rm emacs-29.2.tar.gz
+# WORKDIR /root
+# # install emacs
+# RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
+#     tar zxvf emacs-29.2.tar.gz && \
+#     rm emacs-29.2.tar.gz
 
-WORKDIR /emacs-29.2
+# WORKDIR /emacs-29.2
 
-RUN ./autogen.sh && \
-    ./configure --with-x-toolkit=no && \
-    make -j$(nproc) && \
-    make install
+# RUN ./autogen.sh && \
+#     ./configure --with-x-toolkit=no && \
+#     make -j$(nproc) && \
+#     make install
 
-WORKDIR /root
-# RUN git clone -b macbook_personal --single-branch https://github.com/Yousuf28/doomemacs_config.git
+# WORKDIR /root
+# # RUN git clone -b macbook_personal --single-branch https://github.com/Yousuf28/doomemacs_config.git
 
-RUN git clone --depth 1 https://github.com/Yousuf28/doomemacs /root/.config/emacs && \
-    export PATH=/root/.config/emacs/bin:$PATH
-WORKDIR /root/.config/emacs/bin
-RUN ./doom install --config --no-env --no-fonts
+# RUN git clone --depth 1 https://github.com/Yousuf28/doomemacs /root/.config/emacs && \
+#     export PATH=/root/.config/emacs/bin:$PATH
+# WORKDIR /root/.config/emacs/bin
+# RUN ./doom install --config --no-env --no-fonts
 
 
 WORKDIR ~/

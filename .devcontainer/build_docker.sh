@@ -11,11 +11,11 @@ docker build . -f Dockerfile --no-cache \
                --build-arg R_VERSION_PATCH=1 \
                 --build-arg DEBIAN_FRONTEND=noninteractive \
                  --build-arg CRAN_MIRROR="https://cran.rstudio.com/" \
-               -t yousuf28/r_python:test
+               -t yousuf28/r_python:pfda
 
 if [[ $? = 0 ]] ; then
 echo "Pushing docker..."
-# docker push yousuf28/r_python:vim
+docker push yousuf28/r_python:pfda
 else
 echo "Docker build failed"
 fi
