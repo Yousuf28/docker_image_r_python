@@ -2,7 +2,7 @@
 
 echo "Build the docker"
 
-docker build . -f Dockerfile --no-cache \
+docker build . -f Dockerfile \
                --progress=plain \
                --build-arg PROJECT_NAME="R Dev Env" \
                --build-arg VENV_NAME="R_ENV" \
@@ -15,7 +15,7 @@ docker build . -f Dockerfile --no-cache \
 
 if [[ $? = 0 ]] ; then
 echo "Pushing docker..."
-# docker push yousuf28/r_python:vim
+# docker push yousuf28/r_python:test
 else
 echo "Docker build failed"
 fi

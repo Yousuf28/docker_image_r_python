@@ -71,31 +71,38 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsof \
     && rm -rf /var/lib/apt/lists/*
 
+
+WORKDIR /test_install
+
+RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
+    tar zxvf emacs-29.2.tar.gz && \
+    rm emacs-29.2.tar.gz
+
+# RUN cd emacs-29.2
+WORKDIR /test_install/emacs-29.2
+
+RUN ./autogen.sh && \
+    ./configure --with-x-toolkit=no && \
+    make -j$(nproc) && \
+    make install
 # Step 4 - Install R
+# RUN mkdir r_install
+# WORKDIR r_install
+WORKDIR /root
 RUN wget https://cran.rstudio.com/src/base/R-${R_VERSION_MAJOR}/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz && \
     tar zxvf R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz && \
     rm R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz
 
-WORKDIR /R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}
-
+WORKDIR /root/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}
+# RUN cd R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}
 RUN ./configure ${CONFIGURE_OPTIONS} && \
     make && \
     make install
 
 RUN locale-gen en_US.UTF-8
 
-WORKDIR /root
+# WORKDIR ~/
 # install emacs
-RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
-    tar zxvf emacs-29.2.tar.gz && \
-    rm emacs-29.2.tar.gz
-
-WORKDIR /emacs-29.2
-
-RUN ./autogen.sh && \
-    ./configure --with-x-toolkit=no && \
-    make -j$(nproc) && \
-    make install
 
 WORKDIR /root
 # RUN git clone -b macbook_personal --single-branch https://github.com/Yousuf28/doomemacs_config.git
@@ -106,32 +113,33 @@ WORKDIR /root/.config/emacs/bin
 RUN ./doom install --config --no-env --no-fonts
 
 
+
 WORKDIR ~/
-
 RUN mkdir settings
+# WORKDIR /root/settings
 COPY packages.json install_packages.R requirements.txt install_quarto.sh ./settings/
-
-RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-WORKDIR /root
-
-RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
-RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
-
 RUN Rscript ./settings/install_packages.R
 
-WORKDIR ~/
-# Installing Quarto
-# RUN bash ./settings/install_quarto.sh $QUARTO_VER
-
-# Step 5 - Set Python Environment and install radian
 RUN python3 -m venv /opt/$VENV_NAME  \
     && export PATH=/opt/$VENV_NAME/bin:$PATH \
     && echo "source /opt/$VENV_NAME/bin/activate" >> ~/.bashrc \
     && echo "alias r='radian'" >> ~/.bashrc
 
 RUN R -e 'remotes::install_github("sbutler5/SENDsanitizer@package")'
+
 RUN pip3 install -r ./settings/requirements.txt
+
+WORKDIR /root
+
+RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
+RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
+
+
+# Installing Quarto
+# RUN bash ./settings/install_quarto.sh $QUARTO_VER
+
+# Step 5 - Set Python Environment and install radian
 
 # COPY init.R /root/.vscode-R/init.R
 # COPY init.R /root/.vscode-server/extensions/reditorsupport.r-2.8.2/R/session/init.R
