@@ -73,6 +73,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 
 
+EXPOSE 8080
 
 ENV NODE_VERSION=18.12.0
 # RUN apt install -y curl
@@ -145,6 +146,7 @@ RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubuserconte
 # RUN vim -E -s -u "$HOME/.vimrc" +PlugInstall +qall
 
 ADD vimrc /root/.vimrc
+ADD tmux.conf /root/.tmux.conf
 
 
 RUN vim -E -s -u "$HOME/.vimrc" +PlugInstall +qall

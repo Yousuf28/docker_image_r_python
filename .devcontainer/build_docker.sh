@@ -11,7 +11,7 @@ docker build . -f Dockerfile --no-cache \
                --build-arg R_VERSION_PATCH=1 \
                 --build-arg DEBIAN_FRONTEND=noninteractive \
                  --build-arg CRAN_MIRROR="https://cran.rstudio.com/" \
-               -t yousuf28/r_python:test2
+               -t yousuf28/r_python:latest
 
 if [[ $? = 0 ]] ; then
 echo "Pushing docker..."
