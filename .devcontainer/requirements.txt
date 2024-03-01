@@ -7,3 +7,4 @@ bs4==0.0.2
 xpt2csv-cli==0.1.0
 radian==0.6.12
 jupyterlab==4.1.2
+ipython==8.22.1
