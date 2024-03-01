@@ -72,6 +72,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 
+
+
+ENV NODE_VERSION=18.12.0
+# RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+
 WORKDIR /test_install
 
 RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
@@ -126,12 +139,15 @@ RUN pip3 install -r ./settings/requirements.txt
 WORKDIR /root
 
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
-RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
+# RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
+# RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
+
+# RUN vim -E -s -u "$HOME/.vimrc" +PlugInstall +qall
+
+ADD vimrc /root/.vimrc
+
 
 RUN vim -E -s -u "$HOME/.vimrc" +PlugInstall +qall
-RUN curl -fsSL https://deb.nodesource.com/setup_21.2 |  bash - &&\
-        apt-get install -y nodejs
 
 # Installing Quarto
 # RUN bash ./settings/install_quarto.sh $QUARTO_VER
