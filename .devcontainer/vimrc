@@ -49,16 +49,6 @@ nnoremap <leader>ws :sp<cr>
 map <leader>h :noh<CR>
 
 " Install vim-plug if not found
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
-
-" Run PlugInstall if there are missing plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
-
 " firs downloa vim plug pluging manager
 "https://github.com/junegunn/vim-plug
 " plugin
@@ -76,7 +66,7 @@ Plug 'easymotion/vim-easymotion'
 
 Plug 'vim-python/python-syntax'
 Plug 'jpalardy/vim-slime'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " Plug 'autozimu/LanguageClient-neovim', {
 "     \ 'branch': 'next',
 "     \ 'do': 'bash install.sh',
@@ -110,31 +100,36 @@ let g:slime_bracketed_paste = 1
 "     \ 'r': ['R', '--slave', '-e', 'languageserver::run()'],
 "     \ }
 
-" coc-nvim
-" autocmd FileType python let b:coc_root_patterns = ['.git', '.env']
+
+" colorscheme
+" colorscheme onedark
+
+" coc vim set up
+" uncomment follwing lines
+
 " inoremap <silent><expr> <TAB>
 "       \ coc#pum#visible() ? coc#pum#next(1) :
 "       \ CheckBackspace() ? "\<Tab>" :
 "       \ coc#refresh()
 " inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" " Make <CR> to accept selected completion item or notify coc.nvim to format
-" " <C-g>u breaks current undo, please make your own choice
 " inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
 "                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 
 " function! CheckBackspace() abort
 "   let col = col('.') - 1
 "   return !col || getline('.')[col - 1]  =~# '\s'
 " endfunction
 
-" " Use <c-space> to trigger completion
 " if has('nvim')
 "   inoremap <silent><expr> <c-space> coc#refresh()
 " else
 "   inoremap <silent><expr> <c-@> coc#refresh()
 " endif
 
-
-" colorscheme
-" colorscheme onedark
+" set encoding=utf-8
+" set nobackup
+" set nowritebackup
+" set updatetime=300
+" set signcolumn=yes
