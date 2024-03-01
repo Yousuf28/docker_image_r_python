@@ -78,7 +78,6 @@ RUN wget https://gnu.mirrors.hoobly.com/emacs/emacs-29.2.tar.gz && \
     tar zxvf emacs-29.2.tar.gz && \
     rm emacs-29.2.tar.gz
 
-# RUN cd emacs-29.2
 WORKDIR /test_install/emacs-29.2
 
 RUN ./autogen.sh && \
@@ -86,31 +85,26 @@ RUN ./autogen.sh && \
     make -j$(nproc) && \
     make install
 # Step 4 - Install R
-# RUN mkdir r_install
-# WORKDIR r_install
+
 WORKDIR /root
 RUN wget https://cran.rstudio.com/src/base/R-${R_VERSION_MAJOR}/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz && \
     tar zxvf R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz && \
     rm R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}.tar.gz
 
 WORKDIR /root/R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}
-# RUN cd R-${R_VERSION_MAJOR}.${R_VERSION_MINOR}.${R_VERSION_PATCH}
 RUN ./configure ${CONFIGURE_OPTIONS} && \
     make && \
     make install
 
 RUN locale-gen en_US.UTF-8
 
-# WORKDIR ~/
-# install emacs
 
 WORKDIR /root
-# RUN git clone -b macbook_personal --single-branch https://github.com/Yousuf28/doomemacs_config.git
 
-RUN git clone --depth 1 https://github.com/Yousuf28/doomemacs /root/.config/emacs && \
-    export PATH=/root/.config/emacs/bin:$PATH
-WORKDIR /root/.config/emacs/bin
-RUN ./doom install --config --no-env --no-fonts
+# RUN git clone --depth 1 https://github.com/Yousuf28/doomemacs /root/.config/emacs && \
+#     export PATH=/root/.config/emacs/bin:$PATH
+# WORKDIR /root/.config/emacs/bin
+# RUN ./doom install --config --no-env --no-fonts
 
 
 
@@ -135,6 +129,9 @@ RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubuserconte
 RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
 RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
 
+RUN vim -E -s -u "$HOME/.vimrc" +PlugInstall +qall
+RUN curl -fsSL https://deb.nodesource.com/setup_21.2 |  bash - &&\
+        apt-get install -y nodejs
 
 # Installing Quarto
 # RUN bash ./settings/install_quarto.sh $QUARTO_VER
