@@ -111,16 +111,10 @@ WORKDIR ~/
 RUN mkdir settings
 COPY packages.json install_packages.R requirements.txt install_quarto.sh ./settings/
 
-RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-WORKDIR /root
-
-RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
-RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
-
 RUN Rscript ./settings/install_packages.R
 
-WORKDIR ~/
+RUN R -e 'remotes::install_github("phuse-org/SENDsanitizer")'
+RUN R -e 'remotes::install_github("phuse-org/send-summarizer@pfda_package")'
 # Installing Quarto
 # RUN bash ./settings/install_quarto.sh $QUARTO_VER
 
@@ -130,9 +124,16 @@ RUN python3 -m venv /opt/$VENV_NAME  \
     && echo "source /opt/$VENV_NAME/bin/activate" >> ~/.bashrc \
     && echo "alias r='radian'" >> ~/.bashrc
 
-RUN R -e 'remotes::install_github("phuse-org/SENDsanitizer")'
-RUN R -e 'remotes::install_github("phuse-org/send-summarizer@pfda_package")'
 RUN pip3 install -r ./settings/requirements.txt
+
+RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+WORKDIR /root
+
+RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
+RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
+
+
 
 # COPY init.R /root/.vscode-R/init.R
 # COPY init.R /root/.vscode-server/extensions/reditorsupport.r-2.8.2/R/session/init.R
