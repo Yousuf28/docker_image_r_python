@@ -130,7 +130,7 @@ RUN python3 -m venv /opt/$VENV_NAME  \
     && echo "source /opt/$VENV_NAME/bin/activate" >> ~/.bashrc \
     && echo "alias r='radian'" >> ~/.bashrc
 
-RUN R -e 'remotes::install_github("sbutler5/SENDsanitizer@package")'
+RUN R -e 'remotes::install_github("phuse-org/SENDsanitizer")'
 RUN pip3 install -r ./settings/requirements.txt
 
 # COPY init.R /root/.vscode-R/init.R
