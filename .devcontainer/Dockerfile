@@ -131,6 +131,7 @@ RUN python3 -m venv /opt/$VENV_NAME  \
     && echo "alias r='radian'" >> ~/.bashrc
 
 RUN R -e 'remotes::install_github("phuse-org/SENDsanitizer")'
+RUN R -e 'remotes::install_github("phuse-org/send-summarizer@pfda_package")'
 RUN pip3 install -r ./settings/requirements.txt
 
 # COPY init.R /root/.vscode-R/init.R
