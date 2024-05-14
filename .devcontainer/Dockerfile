@@ -109,7 +109,7 @@ RUN locale-gen en_US.UTF-8
 WORKDIR ~/
 
 RUN mkdir settings
-COPY packages.json install_packages.R requirements.txt install_quarto.sh ./settings/
+COPY packages.json install_packages.R requirements.txt install_quarto.sh sanitize.R ./settings/
 
 RUN Rscript ./settings/install_packages.R
 
