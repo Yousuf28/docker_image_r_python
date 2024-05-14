@@ -47,10 +47,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxpm-dev \
     locales \
     openjdk-8-jdk \
-    screen \
+    # screen \
     texinfo \
-    texlive \
-    texlive-fonts-extra \
+    # texlive \
+    # texlive-fonts-extra \
     vim \
     wget \
     xvfb \
