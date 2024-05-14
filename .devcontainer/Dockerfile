@@ -132,7 +132,7 @@ WORKDIR /root
 
 RUN wget -O .tmux.conf https://raw.githubusercontent.com/Yousuf28/ds_nix/main/tmux.conf
 RUN wget -O .vimrc https://raw.githubusercontent.com/Yousuf28/ds_nix/main/vimrc
-RUN COPY sanitize.R sanitize.R
+COPY sanitize.R sanitize.R
 
 
 # COPY init.R /root/.vscode-R/init.R
